@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         val bottomNav: NavigationBarView = findViewById(R.id.bottom_nav_bar)
         val nextPop =

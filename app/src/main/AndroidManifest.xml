@@ -12,11 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AxeDevToolsSampleApp">
         <activity
-            android:name=".SampleComposeActivity"
-            android:exported="false"
-            android:label="@string/title_activity_sample_compose"
-            android:theme="@style/Theme.AxeDevToolsSampleApp" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

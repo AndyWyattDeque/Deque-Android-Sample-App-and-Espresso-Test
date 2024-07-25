@@ -13,6 +13,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.datatransport.runtime.util.PriorityMapping.toInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -46,12 +47,13 @@ class FragmentCart : Fragment() {
         cartRv = view.findViewById(R.id.cart_rv)
         cartRv.layoutManager = LinearLayoutManager(activity)
         cartRv.adapter = cartAdapter
-        if(!BuildConfig.IS_TESTING.get()) {
+
+        if (BuildConfig.IS_TESTING) {
+            updateTotals(true)
+        } else {
             cartRv.viewTreeObserver.addOnGlobalLayoutListener {
                 updateTotals(true)
             }
-        } else {
-            updateTotals(true)
         }
 
         val deleteAll = view.findViewById<TextView>(R.id.cart_delete_all)
@@ -85,21 +87,27 @@ class FragmentCart : Fragment() {
 
         if (hasItems && cartItemView1 != null && cartItemView2 != null) {
 
-            val count1 = cartItemView1.findViewById<TextView>(R.id.cart_item_counter)
-            val count2 = cartItemView2.findViewById<TextView>(R.id.cart_item_counter)
+            val countStr1 = cartItemView1.findViewById<TextView>(R.id.cart_item_counter)
+            val count1 = getInt(countStr1)
 
-            val price1 = cartItemView1.findViewById<TextView>(R.id.cart_item_price)
-            val price2 = cartItemView2.findViewById<TextView>(R.id.cart_item_price)
+            val countStr2 = cartItemView2.findViewById<TextView>(R.id.cart_item_counter)
+            val count2 = getInt(countStr2)
+
+            val priceStr1 = cartItemView1.findViewById<TextView>(R.id.cart_item_price)
+            val price1 = getInt(priceStr1)
+
+            val priceStr2 = cartItemView2.findViewById<TextView>(R.id.cart_item_price)
+            val price2 = getInt(priceStr2)
 
             totalItems.text =
                 String.format(
                     totalItemsString,
-                    getInt(count1) + getInt(count2)
+                    (count1 + count2).toString()
                 )
 
             totalPrice.text = String.format(
                 totalPriceString,
-                (getInt(count1) * getInt(price1) + getInt(count2) * getInt(price2))
+                ((count1 * price1) + (count2 * price2)).toString()
             )
         } else {
             totalItems.text = String.format(totalItemsString, "0")
